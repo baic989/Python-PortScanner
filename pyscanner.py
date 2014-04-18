@@ -1,23 +1,23 @@
 import socket, sys, time
 
-def skener(*args):
-    host, od, do = args
+def portScanner(*args):
+    host, portFrom, portTo = args
     a = 0
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    do += 1
+    portTo += 1
     try:
         ip = socket.gethostbyname(host)
     except socket.gaierror:
         print "You entered the adress in wrong format. Quitting..."
         sys.exit()
     print "\nScanning started: %s/%s" % (host, ip)
-    print "On ports from %d to %d" % (od, do-1)
+    print "On ports from %d to %d" % (portFrom, portTo-1)
     print "Please wait...\n"
-    for i in range(od, do):
+    for i in range(portFrom, portTo):
         s.settimeout(0.5)
         t1 = time.time()
-        spojen = s.connect_ex((ip, i))
-        if spojen == 0:
+        connected = s.connect_ex((ip, i))
+        if connected == 0:
             print "Port %d is: OPEN" % i
             a += 1
         else:
@@ -25,13 +25,13 @@ def skener(*args):
         s.close()
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if a == 0:
-        print "Sorry, no ports are open in range from %d to %d" % (od, do-1)
+        print "Sorry, no ports are open in range from %d to %d" % (portFrom, portTo-1)
     t2 = time.time()
-    trajanje_skeniranja = t2 - t1
-    print "\nScanning finished in %f..." % trajanje_skeniranja
+    scanTime = t2 - t1
+    print "\nScanning finished in %f..." % scanTime
     print "Do you want to start again?"
-    ponoviti = raw_input("Enter 'yes' to start again, or anything else to quit.\n> ")
-    if "yes" in ponoviti:
+    repeat = raw_input("Enter 'yes' to start again, or anything else to quit.\n> ")
+    if "yes" in repeat:
         prompt()
     else:
         print "Quitting... Thank you for using Python Port Scanner."
@@ -47,18 +47,18 @@ def start():
 
 def prompt():
     host = raw_input("\nPlease enter an adress to scan. Example: www.host.com\n> ")
-    od = None
-    do = None
-    while od == None:
+    portFrom = None
+    portTo = None
+    while portFrom == None:
         try:
-            od = int(raw_input("\nPort to start with:\n> "))
+            portFrom = int(raw_input("\nPort to start with:\n> "))
         except:
             print "A port is a number! Try again..."
-    while do == None:
+    while portTo == None:
         try:
-            do = int(raw_input("\nPort to finish with:\n> "))
+            portTo = int(raw_input("\nPort to finish with:\n> "))
         except:
             print "A port is a number! Try again..."
-    return skener(host, od, do)
+    return portScanner(host, portFrom, portTo)
 
 start()
