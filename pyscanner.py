@@ -2,7 +2,7 @@ import socket, sys, time
 
 def portScanner(*args):
     host, portFrom, portTo = args
-    a = 0
+    openPortsCounter = 0
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     portTo += 1
     try:
@@ -19,19 +19,19 @@ def portScanner(*args):
         connected = s.connect_ex((ip, i))
         if connected == 0:
             print "Port %d is: OPEN" % i
-            a += 1
+            openPortsCounter += 1
         else:
             pass
         s.close()
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if a == 0:
+    if openPortsCounter == 0:
         print "Sorry, no ports are open in range from %d to %d" % (portFrom, portTo-1)
     t2 = time.time()
     scanTime = t2 - t1
     print "\nScanning finished in %f..." % scanTime
     print "Do you want to start again?"
     repeat = raw_input("Enter 'yes' to start again, or anything else to quit.\n> ")
-    if "yes" in repeat:
+    if "yes" || "y" in repeat:
         prompt()
     else:
         print "Quitting... Thank you for using Python Port Scanner."
